@@ -72,7 +72,8 @@ app.get("/find/:id", (req, res) => {
 // POST: /update/:id
 // ================================================================
 app.update("/update/:id", (req, res) => {
-    db.workouts.insert({ mongojs.ObjectId(req.params.id) }, { req.params }, (err, found) => {
+    db.workouts.insert(
+        { _id=mongojs.ObjectId(req.params.id) }, { req.params}, (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -84,7 +85,7 @@ app.update("/update/:id", (req, res) => {
 // DELETE: /delete/:id
 // ==================================================================
 app.delete("/delete/:id", (req, res) => {
-    db.workouts.remove({ mongojs.ObjectId(req.id) }, (err, found) => {
+    db.workouts.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
         if (err) {
             console.log(err);
         } else {
