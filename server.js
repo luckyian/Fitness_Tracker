@@ -1,6 +1,8 @@
 const express = require("express");
 const mongojs = require("mongojs");
+const mongoose = require("mongoose");
 const logger = require("morgan");
+
 
 const app = express();
 
@@ -19,6 +21,16 @@ const db = mongojs(databaseUrl, collections);
 db.on("error", error => {
     console.log("Database Error:", error);
 });
+
+mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/fitness_tracker',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false
+    }
+  );
 
 app.get("/", (req, res) => {
     res.send(index.html);
@@ -106,12 +118,3 @@ app.delete("/clearall", (req, res) => {
     });
 });
 
-// mongoose.connect(
-//     process.env.MONGODB_URI || 'mongodb://localhost/fitness_tracker',
-//     {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//       useCreateIndex: true,
-//       useFindAndModify: false
-//     }
-//   );
