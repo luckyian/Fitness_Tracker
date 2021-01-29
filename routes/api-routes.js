@@ -7,7 +7,7 @@ app.get("/", (req, res) => {
 // Saves a workout to the database's collection
 // POST: /submit
 // ===========================================
-app.post("/submit", (req, res) => {
+app.post("api/submit", (req, res) => {
     db.workouts.insert(req.body, (err, saved) => {
         if (err) {
             console.log(err);
@@ -19,7 +19,7 @@ app.post("/submit", (req, res) => {
 // Retrieves all workouts from the database's collection
 // GET: /all
 // ====================================================
-app.get("/all", (req, res) => {
+app.get("api/all", (req, res) => {
     db.workouts.find({}, (err, found) => {
         if (err) {
             console.log(err);
@@ -31,7 +31,7 @@ app.get("/all", (req, res) => {
 // 3. Retrieves one workout in the database's collection by it's ObjectId
 // GET: /find/:id
 // ==================================================================
-app.get("/find/:id", (req, res) => {
+app.get("api/find/:id", (req, res) => {
     const id = req.params.id
 
     db.workouts.find(
@@ -49,7 +49,7 @@ app.get("/find/:id", (req, res) => {
 // 4. Updates one workout in the database's collection by it's ObjectId
 // POST: /update/:id
 // ================================================================
-app.update("/update/:id", (req, res) => {
+app.update("api/update/:id", (req, res) => {
     db.workouts.insert(
         { _id=mongojs.ObjectId(req.params.id) }, { req.params}, (err, found) => {
         if (err) {
@@ -62,7 +62,7 @@ app.update("/update/:id", (req, res) => {
 // 5. Deletes one workout from the database's collection by it's ObjectId
 // DELETE: /delete/:id
 // ==================================================================
-app.delete("/delete/:id", (req, res) => {
+app.delete("api/delete/:id", (req, res) => {
     db.workouts.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
         if (err) {
             console.log(err);
@@ -74,7 +74,7 @@ app.delete("/delete/:id", (req, res) => {
 // 6. Clear the entire workout collection
 // DELETE: /clearall
 // ===================================
-app.delete("/clearall", (req, res) => {
+app.delete("api/clearall", (req, res) => {
     db.workouts.remove({}, (err, found) => {
         if (err) {
             console.log(err);
