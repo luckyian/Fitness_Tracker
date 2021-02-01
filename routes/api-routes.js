@@ -1,14 +1,24 @@
-app.get("/", (req, res) => {
+const db = require("./models");
+const router = require("express").Router();
+// const databaseUrl = "exercise";
+// const collections = ["exercise"];
+
+// const db = mongojs(databaseUrl, collections);
+
+db.on("error", error => {
+    console.log("Database Error:", error);
+});
+router.get("/", (req, res) => {
     res.send(index.html);
 });
 
 
 
-// Saves a workout to the database's collection
+// Saves an exercise to the database's collection
 // POST: /submit
 // ===========================================
-app.post("api/submit", (req, res) => {
-    db.workouts.insert(req.body, (err, saved) => {
+router.post("api/submit", (req, res) => {
+    db.Exercise.insert(req.body, (err, saved) => {
         if (err) {
             console.log(err);
         } else {
@@ -16,11 +26,11 @@ app.post("api/submit", (req, res) => {
         }
     });
 });
-// Retrieves all workouts from the database's collection
+// Retrieves all exercises from the database's collection
 // GET: /all
 // ====================================================
-app.get("api/all", (req, res) => {
-    db.workouts.find({}, (err, found) => {
+router.get("api/all", (req, res) => {
+    db.Exercise.find({}, (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -28,13 +38,13 @@ app.get("api/all", (req, res) => {
         }
     });
 });
-// 3. Retrieves one workout in the database's collection by it's ObjectId
+// 3. Retrieves one exercise in the database's collection by it's ObjectId
 // GET: /find/:id
 // ==================================================================
-app.get("api/find/:id", (req, res) => {
+router.get("api/find/:id", (req, res) => {
     const id = req.params.id
 
-    db.workouts.find(
+    db.Exercise.find(
         _id = mongojs.ObjectId(id), (err, found) => {
             if (err) {
                 console.log(err);
@@ -46,11 +56,11 @@ app.get("api/find/:id", (req, res) => {
     );
 
 });
-// 4. Updates one workout in the database's collection by it's ObjectId
+// 4. Updates one exercise in the database's collection by it's ObjectId
 // POST: /update/:id
 // ================================================================
-app.update("api/update/:id", (req, res) => {
-    db.workouts.insert(
+router.update("api/update/:id", (req, res) => {
+    db.Exercise.insert(
         { _id=mongojs.ObjectId(req.params.id) }, { req.params}, (err, found) => {
         if (err) {
             console.log(err);
@@ -59,11 +69,11 @@ app.update("api/update/:id", (req, res) => {
         }
     });
 });
-// 5. Deletes one workout from the database's collection by it's ObjectId
+// 5. Deletes one exercise from the database's collection by it's ObjectId
 // DELETE: /delete/:id
 // ==================================================================
-app.delete("api/delete/:id", (req, res) => {
-    db.workouts.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
+router.delete("api/delete/:id", (req, res) => {
+    db.Exercise.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -71,11 +81,11 @@ app.delete("api/delete/:id", (req, res) => {
         }
     });
 });
-// 6. Clear the entire workout collection
+// 6. Clear the entire exercise collection
 // DELETE: /clearall
 // ===================================
-app.delete("api/clearall", (req, res) => {
-    db.workouts.remove({}, (err, found) => {
+router.delete("api/clearall", (req, res) => {
+    db.Exercise.remove({}, (err, found) => {
         if (err) {
             console.log(err);
         } else {
