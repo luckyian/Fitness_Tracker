@@ -13,14 +13,7 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-const databaseUrl = "workout";
-const collections = ["workouts"];
 
-const db = mongojs(databaseUrl, collections);
-
-db.on("error", error => {
-    console.log("Database Error:", error);
-});
 
 mongoose.connect(
     process.env.MONGODB_URI || 'mongodb://localhost/fitness_tracker',
