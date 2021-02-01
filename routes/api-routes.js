@@ -93,3 +93,5 @@ router.delete("api/clearall", (req, res) => {
         }
     });
 });
+
+module.exports = router;
