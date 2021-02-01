@@ -1,5 +1,5 @@
 
 module.exports = {
     Date: require("./date"),
-    Exercise: require("./exercise")
+    Workout: require("./workout")
 };
