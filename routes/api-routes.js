@@ -1,24 +1,24 @@
 const db = require("./models");
 const router = require("express").Router();
-// const databaseUrl = "exercise";
-// const collections = ["exercise"];
+// const databaseUrl = "workout";
+// const collections = ["workout"];
 
 // const db = mongojs(databaseUrl, collections);
 
 db.on("error", error => {
     console.log("Database Error:", error);
 });
+
 router.get("/", (req, res) => {
     res.send(index.html);
 });
 
 
 
-// Saves an exercise to the database's collection
-// POST: /submit
+// Saves an workout to the database's collection
 // ===========================================
-router.post("api/submit", (req, res) => {
-    db.Exercise.insert(req.body, (err, saved) => {
+router.post("/api/workouts", (req, res) => {
+    db.workout.insert(req.body, (err, saved) => {
         if (err) {
             console.log(err);
         } else {
@@ -26,25 +26,27 @@ router.post("api/submit", (req, res) => {
         }
     });
 });
-// Retrieves all exercises from the database's collection
+// Retrieves all workouts from the database's collection
 // GET: /all
 // ====================================================
-router.get("api/all", (req, res) => {
-    db.Exercise.find({}, (err, found) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(found);
+router.get("/api/workouts", (req, res) => {
+    db.workout.aggregate([
+        {
+            $addFields: {
+                totalDuration: { $sum: "$exercises.duration" },
+            }
         }
-    });
+
+    ]).then((dbWorkouts) => { res.json(dbWorkouts); })
+        .catch((err) => { res.json(err); });
 });
-// 3. Retrieves one exercise in the database's collection by it's ObjectId
+// 3. Retrieves one workout in the database's collection by it's ObjectId
 // GET: /find/:id
 // ==================================================================
-router.get("api/find/:id", (req, res) => {
+router.get("/api/workouts/:id", (req, res) => {
     const id = req.params.id
 
-    db.Exercise.find(
+    db.workout.find(
         _id = mongojs.ObjectId(id), (err, found) => {
             if (err) {
                 console.log(err);
@@ -56,24 +58,24 @@ router.get("api/find/:id", (req, res) => {
     );
 
 });
-// 4. Updates one exercise in the database's collection by it's ObjectId
+// 4. Updates one workout in the database's collection by it's ObjectId
 // POST: /update/:id
 // ================================================================
-router.update("api/update/:id", (req, res) => {
-    db.Exercise.insert(
-        { _id=mongojs.ObjectId(req.params.id) }, { req.params}, (err, found) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(found);
-        }
-    });
+router.put("/api/workouts/:id", (req, res) => {
+    db.workout.findByOneAndUpdate(
+        { _id=mongojs.ObjectId(req.params.id) }, { $push: { exercises: req.body } }, (err, found) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(found);
+            }
+        });
 });
-// 5. Deletes one exercise from the database's collection by it's ObjectId
+// 5. Deletes one workout from the database's collection by it's ObjectId
 // DELETE: /delete/:id
 // ==================================================================
-router.delete("api/delete/:id", (req, res) => {
-    db.Exercise.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
+router.delete("/api/workouts/:id", (req, res) => {
+    db.workout.remove({ _id=mongojs.ObjectId(req.id) }, (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -81,17 +83,33 @@ router.delete("api/delete/:id", (req, res) => {
         }
     });
 });
-// 6. Clear the entire exercise collection
+// 6. Clear the entire workout collection
 // DELETE: /clearall
 // ===================================
-router.delete("api/clearall", (req, res) => {
-    db.Exercise.remove({}, (err, found) => {
+router.delete("/api/workouts/", (req, res) => {
+    db.workout.remove({}, (err, found) => {
         if (err) {
             console.log(err);
         } else {
             res.json(found);
         }
     });
+});
+
+router.get("/api/workouts/range", (req, res) => {
+
+    db.workout.aggregate([
+        {
+            $addFields: {
+                totalDuration: { $sum: "$exercises.duration" },
+            }
+        }
+
+    ])
+        .limit(7)
+        .sort({ _id: -1 })
+        .then((dbWorkouts) => { res.json(dbWorkouts); })
+        .catch((err) => { res.json(err); });
 });
 
 module.exports = router;
