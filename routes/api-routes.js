@@ -10,39 +10,39 @@ const mongojs = require("mongojs");
 //     console.log("Database Error:", error);
 // });
 
-router.get("/", (req, res) => {
-    res.send(index.html);
-});
+// router.get("/", (req, res) => {
+//     res.send(index.html);
+// });
 
 
 
 // Saves an workout to the database's collection
 // ===========================================
 router.post("/api/workouts", (req, res) => {
-    db.workout.insert(req.body, (err, saved) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(saved);
-        }
-    });
+    db.workout.create({})
+        .then((dbworkout) => {
+            res.json(dbworkout);
+        })
+        .catch((err) => {
+            res.json(err);
+        });
 });
 // Retrieves all workouts from the database's collection
 // GET: /all
 // ====================================================
-router.get("/api/workouts", (req, res) => {
-    db.collection('workout').aggregate
-    // db.workout.aggregate
-    ([
-        {
-            $addFields: {
-                totalDuration: { $sum: "$exercises.duration" },
-            }
-        }
+// router.get("/api/workouts", (req, res) => {
+//     // db.collection('workout').aggregate
+//     // db.workout.aggregate
+//     ([
+//         {
+//             $addFields: {
+//                 totalDuration: { $sum: "$exercises.duration" },
+//             }
+//         }
 
-    ]).then((dbWorkouts) => { res.json(dbWorkouts); })
-        .catch((err) => { res.json(err); });
-});
+//     ]).then((dbWorkouts) => { res.json(dbWorkouts); })
+//         .catch((err) => { res.json(err); });
+// });
 // 3. Retrieves one workout in the database's collection by it's ObjectId
 // GET: /find/:id
 // ==================================================================
@@ -82,7 +82,7 @@ router.put("/api/workouts/:id", (req, res) => {
 // DELETE: /delete/:id
 // ==================================================================
 router.delete("/api/workouts/:id", (req, res) => {
-    db.workout.remove(_id=mongojs.ObjectId(req.id) , (err, found) => {
+    db.workout.remove(_id = mongojs.ObjectId(req.id), (err, found) => {
         if (err) {
             console.log(err);
         } else {
