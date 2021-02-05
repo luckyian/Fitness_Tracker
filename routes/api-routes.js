@@ -17,19 +17,19 @@ router.post("/api/workouts", (req, res) => {
 // Retrieves all workouts from the database's collection
 // GET: /all
 // ====================================================
-// router.get("/api/workouts", (req, res) => {
-//     // db.collection('workout').aggregate
-//     // db.workout.aggregate
-//     ([
-//         {
-//             $addFields: {
-//                 totalDuration: { $sum: "$exercises.duration" },
-//             }
-//         }
+router.get("/api/workouts", (req, res) => {
+    db.collection('workout').aggregate
+    // db.workout.aggregate
+    ([
+        {
+            $addFields: {
+                totalDuration: { $sum: "$exercises.duration" },
+            }
+        }
 
-//     ]).then((dbWorkouts) => { res.json(dbWorkouts); })
-//         .catch((err) => { res.json(err); });
-// });
+    ]).then((dbWorkouts) => { res.json(dbWorkouts); })
+        .catch((err) => { res.json(err); });
+});
 // 3. Retrieves one workout in the database's collection by it's ObjectId
 // GET: /find/:id
 // ==================================================================
