@@ -1,19 +1,6 @@
 const db = require("../models");
 const router = require("express").Router();
 const mongojs = require("mongojs");
-// const databaseUrl = "workout";
-// const collections = ["workout"];
-
-// const db = mongojs(databaseUrl, collections);
-
-// db.on("error", error => {
-//     console.log("Database Error:", error);
-// });
-
-// router.get("/", (req, res) => {
-//     res.send(index.html);
-// });
-
 
 
 // Saves an workout to the database's collection
