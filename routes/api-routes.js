@@ -6,7 +6,7 @@ const mongojs = require("mongojs");
 // Saves an workout to the database's collection
 // ===========================================
 router.post("/api/workouts", (req, res) => {
-    db.workout.create({})
+    db.Workout.create({})
         .then((dbworkout) => {
             res.json(dbworkout);
         })
@@ -18,8 +18,8 @@ router.post("/api/workouts", (req, res) => {
 // GET: /all
 // ====================================================
 router.get("/api/workouts", (req, res) => {
-    db.collection('workout').aggregate
-    // db.workout.aggregate
+    // db.collection('workout').aggregate
+    db.Workout.aggregate
     ([
         {
             $addFields: {
@@ -36,7 +36,7 @@ router.get("/api/workouts", (req, res) => {
 router.get("/api/workouts/:id", (req, res) => {
     const id = req.params.id
 
-    db.workout.find(
+    db.Workout.find(
         _id = mongojs.ObjectId(id), (err, found) => {
             if (err) {
                 console.log(err);
@@ -53,8 +53,9 @@ router.get("/api/workouts/:id", (req, res) => {
 // ================================================================
 router.put("/api/workouts/:id", (req, res) => {
     const id = req.params.id
-    db.workout.findByOneAndUpdate
-        (_id = mongojs.ObjectId(id),
+    console.log(id, " ", req.body)
+    db.Workout.findByIdAndUpdate
+        (id,
             { $push: { exercises: req.body } }, (err, found) => {
                 if (err) {
                     console.log(err);
@@ -69,7 +70,7 @@ router.put("/api/workouts/:id", (req, res) => {
 // DELETE: /delete/:id
 // ==================================================================
 router.delete("/api/workouts/:id", (req, res) => {
-    db.workout.remove(_id = mongojs.ObjectId(req.id), (err, found) => {
+    db.Workout.remove(_id = mongojs.ObjectId(req.id), (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -81,7 +82,7 @@ router.delete("/api/workouts/:id", (req, res) => {
 // DELETE: /clearall
 // ===================================
 router.delete("/api/workouts/", (req, res) => {
-    db.workout.remove({}, (err, found) => {
+    db.Workout.remove({}, (err, found) => {
         if (err) {
             console.log(err);
         } else {
@@ -92,7 +93,7 @@ router.delete("/api/workouts/", (req, res) => {
 
 router.get("/api/workouts/range", (req, res) => {
 
-    db.workout.aggregate([
+    db.Workout.aggregate([
         {
             $addFields: {
                 totalDuration: { $sum: "$exercises.duration" },
