@@ -18,7 +18,7 @@ router.post("/api/workouts", (req, res) => {
 // GET: /all
 // ====================================================
 router.get("/api/workouts", (req, res) => {
-    // db.collection('workout').aggregate
+   
     db.Workout.aggregate
     ([
         {
